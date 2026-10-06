@@ -1,8 +1,18 @@
 const vm=require('vm'),fs=require('fs'),assert=require('assert');
-const elements={};const context={window:{addEventListener(){}},document:{querySelector:s=>elements[s]??={innerHTML:'',style:{}},addEventListener(){},querySelectorAll(){return[]}},localStorage:{getItem(){return JSON.stringify({...context.SEED,settings:{...context.SEED.settings,welcome:'你好，我是 WillBet 助手'}})},setItem(){}},location:{hash:''},history:{replaceState(){}},structuredClone,console,setTimeout(){},Date};vm.createContext(context);vm.runInContext(fs.readFileSync(__dirname+'/../seed.js','utf8'),context);context.SEED=context.window.SEED;vm.runInContext(fs.readFileSync(__dirname+'/../app.js','utf8'),context);
+const elements={};const context={window:{addEventListener(){}},document:{querySelector:s=>elements[s]??={innerHTML:'',style:{}},addEventListener(){},querySelectorAll(){return[]}},localStorage:{getItem(){return JSON.stringify({...context.SEED,intents:context.SEED.intents.map((i,n)=>n===0?{...i,responseForm:undefined}:n===1?{...i,responseForm:'状态卡片'}:i),settings:{...context.SEED.settings,welcome:'你好，我是 WillBet 助手'}})},setItem(){}},location:{hash:''},history:{replaceState(){}},structuredClone,console,setTimeout(){},Date};vm.createContext(context);vm.runInContext(fs.readFileSync(__dirname+'/../seed.js','utf8'),context);context.SEED=context.window.SEED;vm.runInContext(fs.readFileSync(__dirname+'/../app.js','utf8'),context);
 vm.runInContext(`
  const assert=(ok,msg)=>{if(!ok)throw Error(msg)};
  assert(!JSON.stringify(db).includes('WillBet'),'saved branding migration');
+ assert(RESPONSE_FORMS.length===9&&new Set(RESPONSE_FORMS).size===9,'fixed response form enum');
+ assert(db.intents.every(i=>RESPONSE_FORMS.includes(i.responseForm)),'all intents have valid response form');
+ assert(db.intents[0].responseForm===SEED.intents[0].responseForm,'legacy response form filled');
+ assert(db.intents[1].responseForm==='状态卡片','existing configured response form preserved');
+ view='intents';for(const form of RESPONSE_FORMS){filters={responseForm:form};assert(filtered().every(i=>i.responseForm===form),'response form filter '+form)}
+ filters={module:'Sports',responseForm:'赛事卡片'};assert(filtered().length===8&&filtered().every(i=>i.module==='Sports'&&i.responseForm==='赛事卡片'),'combined response form filter');
+ filters={};assert(listing().includes('data-filter="responseForm"')&&listing().includes('<th>回复形式</th>'),'response form list and filter');
+ editIntent(db.intents[0].id);assert(document.querySelector('#overlay').innerHTML.includes('name="responseForm"'),'edit response form select');
+ editIntent();assert(document.querySelector('#overlay').innerHTML.includes('name="responseForm"'),'new response form select');
+
  for(const t of ['intents','knowledge','sessions','problems'])assert(new Set(db[t].map(x=>x.id)).size===db[t].length,'duplicate ID '+t);
  for(const p of db.problems){const s=find('sessions',p.session);assert(s&&s.messages.some(m=>m.id===p.message),'broken problem reference');assert(find('intents',p.intent),'broken intent reference')}
  const rows=validateImport([{name:'新知识',type:'知识型',context:'多余数据',source:'后台配置',body:'规则正文'},{name:'实时知识',type:'混合型',context:'',source:'后台配置',body:'正文'},{name:'新知识',type:'知识型',context:'',source:'后台配置',body:'规则正文'}]);

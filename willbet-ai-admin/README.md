@@ -24,3 +24,5 @@ cd /Users/apple/Documents/ChatGPT/AIBot_Admin
 新后台项目根目录为 `/Users/apple/Documents/ChatGPT/AIBot_Admin/`；应用目录为 `willbet-ai-admin/`。默认端口仍为 4180，迁移验证使用 `--port 4181`，避免与保留的旧服务冲突。静态资源均使用应用内相对路径；Excel 接口使用当前 origin 的 `/api/template` 和 `/api/parse`。
 
 原始 Intent Tree 资料仍在 `/Users/apple/Documents/ChatGPT/AIBot/`，仅为业务背景来源，不是运行依赖。移动端独立仓库未被迁移或修改。完整交接见项目根目录 `CHAT_MIGRATION_HANDOFF.md`。换端口会使用新的浏览器存储空间，不自动迁移旧 origin 的运营修改。
+
+Intent 的“回复形式”固定为纯文案、文案 + 跳转链接、赛事卡片、游戏卡片、注单卡片、记录卡片、活动卡片、优惠券卡片、状态卡片。支持列表 Tag 展示、筛选和新增/编辑下拉选择，每个 Intent 仅配置一个主要形式。旧浏览器数据缺少此字段时按初始 Intent 补齐，自建 Intent 默认纯文案；已配置值保留。Context 仍由 Knowledge 管理。

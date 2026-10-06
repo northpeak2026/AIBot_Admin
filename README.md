@@ -1,5 +1,9 @@
 # AIBot Admin
 
+## 修改后的预览要求
+
+每次修改完成后，最终回复都必须提供可点击的本地预览链接，并先确认本地服务可用。默认地址：http://127.0.0.1:4181/ 。GitHub Pages 链接不能替代本地预览链接。具体协作要求见 `AGENTS.md`。
+
 ## GitHub Pages 发布
 
 发布配置：`.github/workflows/pages.yml`。启用仓库 Pages 并选择 GitHub Actions 后，推送 main 自动发布。仅发布后台 HTML、CSS、JavaScript，不发布交接文档、QA 文件和 Python 服务。
