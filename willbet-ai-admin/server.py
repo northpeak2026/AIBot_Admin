@@ -5,6 +5,13 @@ from openpyxl import Workbook,load_workbook
 os.chdir(Path(__file__).parent)
 HEAD=['知识名称','类型','回答所需业务事实 / Context','知识来源','正式知识']
 class Handler(SimpleHTTPRequestHandler):
+ def end_headers(self):
+  self.send_header('Cache-Control','no-store, no-cache, must-revalidate')
+  super().end_headers()
+ def send_head(self):
+  # SimpleHTTPRequestHandler otherwise returns 304 for cached static files.
+  if 'If-Modified-Since' in self.headers:del self.headers['If-Modified-Since']
+  return super().send_head()
  def do_GET(self):
   if self.path=='/api/template':
    w=Workbook();s=w.active;s.title='知识导入';s.append(HEAD)

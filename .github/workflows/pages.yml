@@ -23,10 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Prepare static prototype
-        run: |
-          mkdir -p _site
-          cp willbet-ai-admin/index.html willbet-ai-admin/styles.css willbet-ai-admin/app.js willbet-ai-admin/seed.js _site/
-          touch _site/.nojekyll
+        run: python3 willbet-ai-admin/build_site.py --output _site
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
