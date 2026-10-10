@@ -4,7 +4,7 @@ import hashlib
 from pathlib import Path
 
 SOURCE = Path(__file__).resolve().parent
-ASSETS = ('styles.css', 'seed.js', 'app.js')
+ASSETS = ('styles.css', 'seed.js', 'knowledge-v1.js', 'rich-text.js', 'app.js')
 
 
 def build_site(output):
